@@ -1,4 +1,4 @@
-#' Prepare data for <[`catacode`][cata_code]>
+#' Prepare data for <[`CATAcode`][cata_code]>
 #' 
 #' @description
 #' A helper function to transform data into a longer format in preparation for use in <[`catacode`][cata_code]>.

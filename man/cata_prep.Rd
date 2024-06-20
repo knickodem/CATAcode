@@ -2,7 +2,7 @@
 % Please edit documentation in R/cata_prep.R
 \name{cata_prep}
 \alias{cata_prep}
-\title{Prepare data for <\code{\link[=cata_code]{catacode}}>}
+\title{Prepare data for <\code{\link[=cata_code]{CATAcode}}>}
 \usage{
 cata_prep(
   data,

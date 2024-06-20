@@ -21,7 +21,7 @@ cata_code(
 \arguments{
 \item{data}{A data frame with one row for each \code{id} (by \code{time}, if specified) by response category combination.
 If \code{data} are currently in "wide" format where each response category is its own column,
-use <\code{\link[=cata_prep]{catacode}}> first to transform \code{data}into the proper format. See \emph{Examples}.}
+use <\code{\link[=cata_prep]{CATAcode}}> first to transform \code{data}into the proper format. See \emph{Examples}.}
 
 \item{id}{Column in \code{data} to uniquely identify each subject.}
 
@@ -90,23 +90,23 @@ sources_long <- sources_race \%>\%
   cata_prep(id = ID, cols = Black:White, time = Wave)
   
 # Identify all unique response patterns
-all <- catacode(sources_long, id = ID, categ = Category, resp = Response,
+all <- cata_code(sources_long, id = ID, categ = Category, resp = Response,
 approach = "all", time = Wave, new.name = "Race_Ethnicity")
 unique(all$Race_Ethnicity)
   
 # Coding endorsement of multiple categories as "Multiple
-multiple <- catacode(sources_long, id = ID, categ = Category, resp = Response,
+multiple <- cata_code(sources_long, id = ID, categ = Category, resp = Response,
 approach = "multiple", time = Wave, new.name = "Race_Ethnicity")
 
 # Prioritizing endorsement of "Indigenous" and "Islander". If subject endorsed both
 # "Indigenous" and "Islander", they are coded as "Indigenous" because it is listed first
 # in the priority argument.
-priority <- catacode(sources_long, id = ID, categ = Category, resp = Response,
+priority <- cata_code(sources_long, id = ID, categ = Category, resp = Response,
 approach = "priority", time = Wave, new.name = "Race_Ethnicity",
 priority = c("Indigenous", "Islander"))
 
 # Code as category with the most endorsements. In the case of ties, code as "Multiple"
-mode <- catacode(sources_long, id = ID, categ = Category, resp = Response,
+mode <- cata_code(sources_long, id = ID, categ = Category, resp = Response,
 approach = "mode", time = Wave, new.name = "Race_Ethnicity")
 
 # Compare frequencies across coding schemes
