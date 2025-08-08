@@ -6,7 +6,7 @@
 #' Sources of Strength program.
 #' 
 #' @format
-#' A data frame with 17,057 rows and 9 columns:
+#' A data frame with 16,922 rows and 9 columns:
 #' \describe{
 #'   \item{ID}{Subject identification number}
 #'   \item{Wave}{Data collection time point}

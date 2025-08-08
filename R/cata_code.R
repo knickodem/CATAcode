@@ -190,10 +190,11 @@ cata_code <- function(data, id, categ, resp, approach,
     if(is.null(priority)){
       
       output <- counts %>%
-        reframe(new = case_when(n() == 1 ~ {{categ}},                         # same category across time
-                                sum(n_time == max(n_time)) > 1 ~ multi.name,  # ties - multiple categories with equal frequency
-                                n_time == max(n_time) ~ {{categ}},            # multiple categories but one at a higher frequency
-                                TRUE ~ "Temp")) %>%                           # categories chosen at lower frequency
+        mutate(n_max = max(n_time)) %>%                                # max frequency within participant
+        reframe(new = case_when(n() == 1 ~ {{categ}},                  # same category across time
+                                sum(n_time == n_max) > 1 ~ multi.name, # ties - multiple categories with equal frequency
+                                n_time == n_max ~ {{categ}},           # multiple categories but one at a higher frequency
+                                TRUE ~ "Temp")) %>%                    # categories chosen at lower frequency
         filter(new != "Temp")
       
     } else {
@@ -208,10 +209,11 @@ cata_code <- function(data, id, categ, resp, approach,
         
         # A priority, then the mode response with ties coded as multiple 
         output <- counts %>%
+          mutate(n_max = max(n_time)) %>%                                # max frequency within participant
           reframe(new = case_when(sum({{categ}} == priority) > 0 ~ priority,    # gave priority at any point, code as priority
                                   n() == 1 ~ {{categ}},                         # same category across time
-                                  sum(n_time == max(n_time)) > 1 ~ multi.name,  # ties - multiple categories with equal frequency
-                                  n_time == max(n_time) ~ {{categ}},            # multiple categories but one at a higher frequency
+                                  sum(n_time == n_max) > 1 ~ multi.name,  # ties - multiple categories with equal frequency
+                                  n_time == n_max ~ {{categ}},            # multiple categories but one at a higher frequency
                                   TRUE ~ "Temp")) %>%                           # categories chosen at lower frequency
           filter(new != "Temp")
         
@@ -219,11 +221,12 @@ cata_code <- function(data, id, categ, resp, approach,
         
         # priorities, then the mode response with ties coded as multiple 
         output <- counts %>%
+          mutate(n_max = max(n_time)) %>%                                # max frequency within participant
           reframe(new = case_when(sum({{categ}} == priority[[1]]) > 0 ~ priority[[1]], # gave priority at any point, code as priority
                                   sum({{categ}} == priority[[2]]) > 0 ~ priority[[2]],
                                   n() == 1 ~ {{categ}},                                # same category across time
-                                  sum(n_time == max(n_time)) > 1 ~ multi.name,         # ties - multiple categories with equal frequency
-                                  n_time == max(n_time) ~ {{categ}},                   # multiple categories but one at a higher frequency
+                                  sum(n_time == n_max) > 1 ~ multi.name,         # ties - multiple categories with equal frequency
+                                  n_time == n_max ~ {{categ}},                   # multiple categories but one at a higher frequency
                                   TRUE ~ "Temp")) %>%                                  # categories chosen at lower frequency
           filter(new != "Temp")
         
