@@ -5,11 +5,11 @@
 \alias{sources_race}
 \title{Sources of Strength Race/Ethnicity Data}
 \format{
-A data frame with 17,057 rows and 9 columns:
+A data frame with 16,922 rows and 9 columns:
 \describe{
 \item{ID}{Subject identification number}
 \item{Wave}{Data collection time point}
-\item{Black - White}{Indicator variables for check-all-that-apply
+\item{Black:White}{Indicator variables for check-all-that-apply
 responses where 1 = endorsement}
 }
 }

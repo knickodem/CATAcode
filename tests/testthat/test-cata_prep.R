@@ -2,7 +2,7 @@
 data("sources_race")
 
 testthat::test_that("basics",{
-  expect_equal(nrow(cata_prep(sources_race, id = ID, cols = Black:White, time = Wave)), 119399)
+  expect_equal(nrow(cata_prep(sources_race, id = ID, cols = Black:White, time = Wave)), 118454)
   expect_equal(ncol(cata_prep(sources_race, id = ID, cols = Black:White)), 3)
 })
 

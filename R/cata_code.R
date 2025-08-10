@@ -7,13 +7,12 @@
 #' 
 #' @param data A data frame with one row for each `id` (by `time`, if specified) by response category combination. 
 #' If `data` are currently in "wide" format where each response category is its own column, 
-#' use <[`CATAcode`][cata_prep]> first to transform `data`into the proper format. See _Examples_.
+#' use [cata_prep()] first to transform `data`into the proper format. See _Examples_.
 #' 
 #' @inheritParams cata_prep
 #' @param categ Column in `data` indicating the check-all-that apply categories.
 #' @param resp Column in `data` indicating the check-all-that apply responses.
 #' @param approach One of "all", "count", "multiple", "priority", or "mode". See _Details_.
-
 #' @param endorse The value in `resp` indicating endorsement of the category in `categ`. This must be the same for all categories.
 #' Common values are 1 (default), "yes", TRUE, or 2 (for SPSS data).
 #' @param priority Character vector of one or more categories in the `categ` column indicating the order to prioritize 
@@ -56,9 +55,8 @@
 #' 
 #' @examples
 #' # prepare data
-#' sources_race
-#' sources_long <- sources_race %>%
-#'   cata_prep(id = ID, cols = Black:White, time = Wave)
+#' data(sources_race)
+#' sources_long <- cata_prep(data = sources_race, id = ID, cols = Black:White, time = Wave)
 #'   
 #' # Identify all unique response patterns
 #' all <- cata_code(sources_long, id = ID, categ = Category, resp = Response,
@@ -69,12 +67,12 @@
 #' multiple <- cata_code(sources_long, id = ID, categ = Category, resp = Response,
 #' approach = "multiple", time = Wave, new.name = "Race_Ethnicity")
 #' 
-#' # Prioritizing endorsement of "Indigenous" and "Islander". If subject endorsed both
-#' # "Indigenous" and "Islander", they are coded as "Indigenous" because it is listed first
+#' # Prioritizing "Native_American" and "Pacific_Islander" endorsements
+#' # If participant endorsed both, they are coded as "Native_American" because it is listed first
 #' # in the priority argument.
 #' priority <- cata_code(sources_long, id = ID, categ = Category, resp = Response,
 #' approach = "priority", time = Wave, new.name = "Race_Ethnicity",
-#' priority = c("Indigenous", "Islander"))
+#' priority = c("Native_American", "Pacific_Islander"))
 #' 
 #' # Code as category with the most endorsements. In the case of ties, code as "Multiple"
 #' mode <- cata_code(sources_long, id = ID, categ = Category, resp = Response,

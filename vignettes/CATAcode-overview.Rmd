@@ -1,10 +1,10 @@
 ---
-title: "CATAcode-overview"
+title: "CATAcode Overview"
 resource_files:
   - img/cata_logo.png 
 output: rmarkdown::html_vignette
 vignette: >
-  %\VignetteIndexEntry{CATAcode overview}
+  %\VignetteIndexEntry{CATAcode-overview}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 ---
@@ -19,27 +19,28 @@ knitr::opts_chunk$set(
 ```
 
 ```{r setup, echo = FALSE, message=FALSE}
-library(CATAcode) # uncomment once 
-# devtools::install_github("knickodem/CATAcode")
+library(CATAcode)
 library(dplyr)
-library(tidyr)
 ```
 
-## Introduction to `CATAcode`
+# Introduction to `CATAcode`
 
-Accurately measuring, reporting, interpreting, and evaluating identity categories in social science research is essential. However, check-all-that-apply (CATA) responses present methodological challenges due to the large permutations of categories and the fluctuating salience of intersecting identities across time and contexts. These challenges can hinder the validity of quantitative studies, particularly those addressing racial, ethnic, and other social identity differences.
+Check-all-that-apply (CATA) responses present methodological challenges due to the large permutations of categories and the fluctuating salience of intersecting responses across time and contexts. In particular, accurately measuring, reporting, interpreting, and evaluating identity categories in social science research is essential. These challenges can hinder the validity of quantitative studies, especially those addressing social identity differences.
 
-`CATAcode` is an R package designed to assist researchers in exploring and preparing CATA demographic items for statistical modeling. By applying this tool to cross-sectional and longitudinal data, can help enhance the generalizability, transparency, and reproducibility of your research.
+`CATAcode` is an R package designed to assist researchers in exploring CATA responses for summary descriptives and and preparing CATA items for statistical modeling. Applying this tool to cross-sectional and longitudinal data can help enhance the generalizability, transparency, and reproducibility of your research.
+
+In surveys, a CATA item can also be structured as a series of forced choice dichotomous items (e.g., Yes/No). For instance, for an evaluation of their program graduate students were asked, "Have you experienced any of these barriers to conducting research?", with 5 options of: lack of funding, lack of mentorship, lack of research infrastructure (e.g., software), lack of time capacity, and other barriers. The survey could either instruct responses to CATA or to explicitly select Yes or No to each option. The `CATAcode` package is suitable for analyzing data from both approaches.
 
 This vignette demonstrates how to use the `CATAcode` package to:
 
 * Identify participants who endorse multiple categories
-* Generate tables showing every identity combination in the data
+* Generate tables showing every endorsement combination in the data
 * Apply various strategies for merging and prioritizing categories
-* Handle both cross-sectional and longitudinal data
+* Handle both cross-sectional and longitudinal data  
 
-## The `CATAcode` Workflow
-1. Import & wrangle raw wide‑format data into long format (using the cata_prep() function).
+# The `CATAcode` Workflow
+
+1. Import & wrangle raw wider format data into longer format using the cata_prep() function.
 2. Explore all response combinations or category counts to understand complexity.
 3. Code new variables with principled strategies (multiple, priority, mode).
 4. Document & export metadata, tables, and optional visualizations.
@@ -49,203 +50,185 @@ This vignette demonstrates how to use the `CATAcode` package to:
 
 You can install the released version of `CATAcode` from CRAN with:
 
-```{r install}
-#install.packages("CATAcode")
+```{r install, eval=F}
+install.packages("CATAcode")
 ```
 
 Or the development version from GitHub:
 
-```{r dev-install}
-# devtools::install_github("knickodem/CATAcode")
+```{r dev-install, eval=F}
+devtools::install_github("knickodem/CATAcode")
 ```
 
 Once installed, load the package:
 
-```{r load}
-# library(CATAcode)
+```{r load, eval=F}
+library(CATAcode)
 ```
 
 ### Data Preparation
 
-Before using the main `CATAcode` function, the data must be prepared. The `cata_prep` function helps reshape your data from wide to long format.
+Before using the main `cata_code()` function, the data must be prepared. The `cata_prep()` function helps reshape your data from wider to longer format.
 
 **Requirements**
 
 Your dataset should include:
 
 * An ID variable
-* Dichotomous race/identity variables (1/0, Yes/No, TRUE/FALSE)
+* A set of variables (i.e., columns) indicating the check-all-that-apply categories to examine. All variables are expected to be dichotomous (e.g., 1/0, Yes/No, TRUE/FALSE) where the value signifying endorsement is consistent across all of the variables.
 * For longitudinal data, a time variable (e.g., Wave)
 
 
 **Example Data**
 
-Let's create some example data to demonstrate:
+The `CATAcode` package includes a longitudinal dataset comprised of CATA responses to 7 race/ethnicity identities from 6,442 students at four time points. For each identity category/column, 1 = Selected and `NA` = Not selected. To load and view the first few rows of the dataset:
+
+```{r longitudinal-data}
+data("sources_race")
+head(sources_race)
+```
+
+
+Let's also create some example cross-sectional (i.e., single timepoint) data based on our earlier question to graduate students: "Have you experienced any of these barriers to conducting research?" For each category, students provide a "Yes" or "No" response.
 
 
 ```{r example-data, echo = TRUE}
 
-# Creating a Cross-sectional dataset
+# Creating a cross-sectional dataset (N = 1000)
 set.seed(123)  
 
-## --------------------- 1.  Cross‑sectional sample (N = 1000) ---------------------
 n_cross = 1000
 
 cross = data.frame(
   ID               = 1:n_cross,
-  Black            = sample(c(0, 1), n_cross, replace = TRUE, prob = c(.85, .15)),
-  Asian            = sample(c(0, 1), n_cross, replace = TRUE, prob = c(.90, .10)),
-  White            = sample(c(0, 1), n_cross, replace = TRUE, prob = c(.30, .70)),
-  Native_American  = sample(c(0, 1), n_cross, replace = TRUE, prob = c(.97, .03)),
-  Pacific_Islander = sample(c(0, 1), n_cross, replace = TRUE, prob = c(.98, .02)),
-  Another_Race     = sample(c(0, 1), n_cross, replace = TRUE, prob = c(.95, .05))
-)
-
-## --------------------- 2.  Longitudinal sample (N = 1000 × 3 waves) --------------
-n_long  = 1000
-waves   = 1:3
-
-long = expand.grid(ID = 1:n_long, Wave = waves) |>
-  dplyr::arrange(ID, Wave) |>
-  dplyr::mutate(
-    Black            = sample(c(0, 1), n(), replace = TRUE, prob = c(.85, .15)),
-    Asian            = sample(c(0, 1), n(), replace = TRUE, prob = c(.90, .10)),
-    White            = sample(c(0, 1), n(), replace = TRUE, prob = c(.30, .70)),
-    Native_American  = sample(c(0, 1), n(), replace = TRUE, prob = c(.97, .03)),
-    Pacific_Islander = sample(c(0, 1), n(), replace = TRUE, prob = c(.98, .02)),
-    Another_Race     = sample(c(0, 1), n(), replace = TRUE, prob = c(.95, .05))
+  Funding          = sample(c("No", "Yes"), n_cross, replace = TRUE, prob = c(.15, .85)),
+  Mentorship       = sample(c("No", "Yes"), n_cross, replace = TRUE, prob = c(.10, .90)),
+  Infrastructure   = sample(c("No", "Yes"), n_cross, replace = TRUE, prob = c(.45, .55)),
+  Time_Capacity    = sample(c("No", "Yes"), n_cross, replace = TRUE, prob = c(.25, .75)),
+  Other_Barrier    = sample(c("No", "Yes"), n_cross, replace = TRUE, prob = c(.80, .20))
   )
 
-# --------------------- Display the first few rows of each dataset ---------------------
+# Display the first few rows of the dataset
 head(cross)
-head(long)
-
 
 ```
 
 **Using cata_prep**
 
-`cata_prep()` is the gateway function for every workflow in `CATAcode`. 
+`cata_prep()` is the gateway function for every workflow in `cata_code()`. 
 
-It does four jobs:
+Its jobs are to:
 
-1. **Reshapes** data from wide to tidy‑long format so every downstream CATAcode function can iterate over one row per person‑category (or person‑time‑category).
-2. **Standardizes** column names (`id`, `Category`, `Response`, `time`) and stores them as attributes, eliminating repetitive arguments. You tell `cata_prep()` which columns hold the IDs, which hold the categories, and which values represent endorsement (defaults to 1/0).
-3. **Validates** that responses are 1/0 (or whatever you’ve defined as “endorsed”/“not endorsed”), each id–Category combination is unique per time‑point, missing IDs or categories are flagged early.
+1. **Reshape** data from wide to tidy‑long format so the downstream `cata_code()` function can iterate over one row per person‑category (or person‑time‑category).
+2. **Standardize** column names (`id`, `Category`, `Response`, `time`) and stores them as attributes, eliminating repetitive arguments. You tell `cata_prep()` which columns hold the IDs, which columns hold the categories, and how you want to name the two columns in the long format data that contain the categories and endorsed/not endorsed responses. 
+
+```{r, include = FALSE, eval=FALSE}
+## cata_prep() does not currently do these but we could add these features
+3. **Validates** that each id–Category combination is unique per time‑point, missing IDs or categories are flagged early.
 4. **Adds** those attributes (ID column, time column, endorsement code) as metadata that all other helpers read automatically, keeping the pipeline self‑documenting.
+```
 
-**Preparing the data using `cata_prep`:**
+**`cata_prep()` function arguments:**
 
 * data = cross
   * Provide the name of the dataset. In our case *cross* for the cross-sectional dataset. 
 * id = ID
-  * Supply the column that uniquely identifies each respondent.  Must be unique *within each time‑point* if you also pass `time =`.
+  * Supply the column that uniquely identifies each respondent. Must be unique *within each time‑point* if you also pass `time =`.
   * If your ID column is named something else, e.g. "participant_id", write id = participant_id.
-* cols = Black:Another_Race
-  * Tell `cata_prep()` which columns are the binary CATA indicators for a single identity (here, race/ethnicity).
+* cols = Funding:Other_Barrier
+  * Tell `cata_prep()` which columns are the dichotomous CATA indicators. In the cross-sectional data, these are the barriers; in the longitudinal data, these are the race/ethnicity identities.
   * You can:
-      * Use the tidy‑select range syntax we show here, which grabs every column from `Black` through `Another_Race`, inclusive, in the order they appear in the data frame.
-    * List them explicitly: cols = c(Black, Asian, White, Native_American, Pacific_Islander, Another_Race)
-    * Or use a tidy‑select helper: cols = starts_with("race_")
-* time  = wave 
-  * For longitudinal data add time = wave_column so `cata_prep()` keeps observations from different waves separate and stores the time variable as an attribute.
+      * Use the tidy‑select range syntax we show here, which grabs every column from `Funding` through `Other_Barrier`, inclusive, in the order they appear in the data frame.
+    * List them explicitly: cols = c(Black, Native_American, Asian, White, Pacific_Islander, Hispanic, Multiracial)
+    * Or use a tidy‑select helper when applicable: cols = starts_with("race_")
+* names_to = "Barriers" and values_to = "YN"
+  * When `cata_prep()` transforms the data into long format it needs to name the resulting two columns storing the cateogry labels and participants' responses to each category, respectively. You have the option of providing the names using the `names_to` argument for the categories and `values_to` argument for the responses. By default, `cata_prep()` uses the names "Categories" and "Responses", respectively.
+* time = Wave 
+  * For longitudinal data, provide the column indicating the time so `cata_prep()` keeps observations from different time points separate.
 
-***After this call, the new data will be a tidy long table with three or four standardized columns: id, Category, Response,  and time if supplied plus attributes that all other CATAcode functions read automatically.***
+
+***After this call, the new data will be a tidy long dataframe with three or four standardized columns: id, Category, Response, and time if supplied.***
 
 ```{r cata_prep, echo = TRUE}
 # Prepare cross-sectional 
-#datacross_prep <- cata_prep(data = cross, id = ID, cols = Black:Another_Race)
+datacross_prep <- cata_prep(data = cross, id = ID, cols = Funding:Other_Barrier, names_to = "Barriers", values_to = "YN")
 
 # Prepare longitudinal 
+datalong_prep <- cata_prep(data = sources_race, id = ID, cols = c(Asian, Black:White), time = Wave)
 
-#datalong_prep <- cata_prep(data = long, id = ID, cols = c(Asian, Black:White, Native_American:Hispanic), time = Wave)
-
-# Display the prepared data
-#head(cross_prep)
-#head(long_prep)
+# Display the first few rows of the prepared data
+head(datacross_prep)
+head(datalong_prep)
 
 ```
 
 ## 2. Explore All Response Combinations
 
-The first step when analyzing CATA data is exploring all combinations of categories present in the data. The `cata_code` function with `approach = "all"` helps identify every unique identity combination. For longitudinal data, `approach = "counts"' provides a summary of how many times each participant endorsed each category across time.
+The first step when analyzing CATA data is exploring all combinations of categories present in the data. The `cata_code()` function with `approach = "all"` helps identify every unique category combination. For longitudinal data, `approach = "counts"` provides a summary of how many times each participant endorsed each category across time.
 
-Function arguments:
+**`cata_code()` function arguments:**
 
-```{r main_function, echo = TRUE}
-# cata_code(data, id, categ, resp,
-#           approach = c("all","counts","multiple","priority","mode"),
-#           endorse  = 1,
-#           new.name = NULL
-#           )
-```
-
-
-* data = cross_prep or long_prep
-  * The tidy‑long table returned by cata_prep().
-
+* data = datacross_prep (or datalong_prep)
+  * The tidy‑long format dataframe returned by `cata_prep()`.
 * id = ID
-  * Column that uniquely identifies each respondent.  Must match the `id` you used in `cata_prep()`; here it is still `ID`.
-
-* categ = Category
-  * The column that stores the *name* of the race/ethnicity category for each row (auto‑generated by cata_prep()).
-
-* resp = Response
-  * The column that stores the endorsement code (1 = selected, 0 = not). Again, this comes from `cata_prep()`.
-
-* approach =
-  * "all" will return **every unique combination** of endorsed categories for each person‑wave.  Useful for an initial scan of multiracial complexity.
-  * "counts" for longitudinal only will return a **count table** of how many times each participant endorsed each category across waves.
-
-* endorse = 1
-  * Which value in `resp` counts as “checked”.  Stick with the default `1` unless your data use a different coding.
-
+  * Column that uniquely identifies each respondent. Must match the `id` we specified in `cata_prep()`, which was `ID` for both the cross-sectional and longitudinal datasets.
+* categ = Barriers
+  * The column that stores the category labels. For the cross-sectional data, we named this column "Barriers" in  `cata_prep()`. For the longitudinal data, we relied on the `cata_prep()` default name of "Category".
+* resp = YN
+  * The column that stores the response codes (e.g., Yes/No). For the cross-sectional data, we named this column "YN" in  `cata_prep()`. For the longitudinal data, we relied on the `cata_prep()` default name of "Response".
+* approach = "all"
+  * "all" will return **every unique combination** of endorsed categories for each person‑wave.  Useful for an initial scan of response complexity. 
+  * "counts" is only for longitudinal data, which we show below, and returns a **count table** of how many times each participant endorsed each category across time points.
+  * We will discuss the other options of "multiple", "priority", and "mode" in a moment.
+* endorse = "Yes"
+  * The value in `resp` indicating endorsement of the category. For the cross-sectional data, the value is "Yes"; in the longitudinal data, the value is 1.
 * new.name = (optional)
-  * Name for the newly created variable when `approach = "all"`, "multiple", "priority", or "mode".  For "counts" a wide participant‑level data frame is returned, so `new.name` is ignored.
+  * Name for the newly created variable when `approach` = "all", "multiple", "priority", or "mode".  For "counts" a wide participant‑level dat frame is returned, so `new.name` is ignored.
+* sep = "-"
+  * Only used for `approach = "all"` to separate each endorsed category when they are combined into a single variable.
 
 **Explore all combinations in cross-sectional data**
 
 ```{r all_cross, echo = TRUE}
 # Explore all combinations in cross-sectional data
-# cross_all <- cata_code(data = cross_prep, 
-                         # id = ID,
-                         # categ = Category, 
-                         # resp = Response, 
-                         # approach = "all", 
-                         # endorse = 1,
-                         # new.name = "Race_Ethnicity")
+cross_all <- cata_code(data = datacross_prep,
+                      id = ID,
+                      categ = Barriers,
+                      resp = YN,
+                      approach = "all",
+                      endorse = "Yes",
+                      new.name = "Combinations",
+                      sep = "-")
 
 # Display the result
-# head(cross_all)
+head(cross_all)
 # 
 # Count the frequency of each combination
-# table(cross_all$Race_Ethnicity)
+table(cross_all$Combinations)
 
 ```
 
-**Explore all combinations in longitudinal data**
+**Explore endorsement counts over time in longitudinal data**
 
 ```{r count_long, echo = TRUE}
 # Explore all combinations in cross-sectional data
 # Get counts across waves
-# long_counts <- cata_code(data = long_prep, 
-#                          id = ID, 
-#                          categ = Category, 
-#                          resp = Response, 
-#                          approach = "counts", 
-#                          endorse = 1)
-# 
+long_counts <- cata_code(data = datalong_prep,
+                         id = ID,
+                         categ = Category,
+                         resp = Response,
+                         approach = "counts",
+                         endorse = 1)
+
 # Display the result
-# head(long_counts)
+head(long_counts)
 ```
 
-## 3. Coding New Variable for Statistical Analysis
+## 3. Coding A New Variable for Statistical Analysis
 
-`CATAcode` offers several approaches to prepare CATA data for statistical modeling (multiple, priority, mode).
+`CATAcode` offers several approaches with the `cata_code()` function to prepare CATA data for statistical modeling:
 
-`cata_code()` supports several strategies:
-
-  * "multiple" - lump anyone endorsing ≥ 2 categories into a single catch‑all group (e.g., "Multiracial").
+  * "multiple" - combine anyone endorsing ≥ 2 categories into a single catch‑all group (e.g., "Multiracial").
   * "priority" - assign a participant to the first category in a user‑supplied priority list that they endorsed.
   * "mode" - longitudinal only; assign the category endorsed most often across waves (ties are handled like "multiple" or decided by priority if supplied).
 
@@ -254,179 +237,147 @@ Function arguments:
 The "multiple" approach automatically combines individuals who have reported **two or more categories** into the same group.
 
 A new argument to name the new category 
-* multi.name = "Multiracial"
+* multi.name = "Multiple"
   * What to call the catch‑all group of people who checked 2+ boxes.
 
 
 ```{r multiple, echo = TRUE}
-# # Apply the "multiple" approach
-# cross_multiple <- cata_code(data = cross_prep, 
-#                             id = ID, 
-#                             categ = Category, 
-#                             resp = Response, 
-#                             approach = "multiple", 
-#                             endorse = 1, 
-#                             new.name = "Race_Ethnicity", 
-#                             multi.name = "Multiracial")
-# 
-# # Display the results
-# table(cross_multiple$Race_Ethnicity)
+# Apply the "multiple" approach
+cross_multiple <- cata_code(data = datacross_prep,
+                            id = ID,
+                            categ = Barriers,
+                            resp = YN,
+                            approach = "multiple",
+                            endorse = "Yes",
+                            new.name = "Barrier",
+                            multi.name = "Multiple")
+
+# Display the results
+table(cross_multiple$Barrier)
 ```
 
 
 **The "priority" Approach**
 
-The "priority" approach allows users to **prioritize specific categories** of interest.
+In our example the vast majority of students selected two or more categories and were combined into the Multiple category. Although this informs the graduate program that most students experience multiple barriers to conducting research, it provides little information for actionable changes. In contrast, the "priority" approach allows us to **prioritize specific categories** of interest. For instance, the graduate program might have a particular interest improving mentorship of graduate researchers and investing in research infrastructure.
 
-A new argument to list the priority categories
+A new argument to list the priority categories:
 
-* priority = c("Native_American", "Pacific_Islander", ...)
-  * Vector of category labels in **descending priority order**. A participant is assigned to the first category on this list that they endorsed.  If they endorsed none of the priority categories, they fall back to their single selection (or `multi.name` if they endorsed >1 non‑priority category).
+* priority = c("Mentorship", "Infrastructure")
+  * Vector of category labels in **descending priority order**. A participant is assigned to the first category in this list that they endorsed.  If they endorsed none of the priority categories, they fall back to their single selection (or `multi.name` if they endorsed > 1 non‑priority category).
 
 ```{r priority, echo = TRUE}
-# # Apply the "priority" approach
-# cross_priority <- cata_code(data = cross_prep, 
-#                             id = ID, 
-#                             categ = Category, 
-#                             resp = Response, 
-#                             approach = "priority", 
-#                             endorse = 1, 
-#                             new.name = "Race_Ethnicity", 
-#                             priority = c("Native_American", "Pacific_Islander"))
-# 
-# # Display the results
-# table(cross_priority$Race_Ethnicity)
+# Apply the "priority" approach
+cross_priority <- cata_code(data = datacross_prep,
+                            id = ID,
+                            categ = Barriers,
+                            resp = YN,
+                            approach = "priority",
+                            endorse = "Yes",
+                            new.name = "Barrier",
+                            multi.name = "Multiple",
+                            priority = c("Mentorship", "Infrastructure"))
+
+# Display the results
+table(cross_priority$Barrier)
 ```
 
 **The "mode" Approach for Longitudinal Data**
 
 The "mode" approach is designed for longitudinal data, placing individuals into the category they endorsed most often across time points.
 
-A new argument to list the name of the wave
+A new argument to list the name of the wave:
 
 * time = Wave
   * Column identifying measurement occasion.
   
 ```{r mode, echo = TRUE}  
 # Apply the "mode" approach
-# long_mode <- cata_code(data = long_prep, 
-#                        id = ID, 
-#                        categ = Category, 
-#                        resp = Response, 
-#                        approach = "mode", 
-#                        endorse = 1, 
-#                        time = Wave, 
-#                        new.name = "Race_Ethnicity", 
-#                        multi.name = "Multiracial")
-# 
-# # Display the results
-# table(long_mode$Race_Ethnicity)
+long_mode <- cata_code(data = datalong_prep,
+                       id = ID,
+                       categ = Category,
+                       resp = Response,
+                       approach = "mode",
+                       endorse = 1,
+                       time = Wave,
+                       new.name = "Race_Ethnicity",
+                       multi.name = "Multiracial")
+
+# Display the results
+table(long_mode$Race_Ethnicity)
 ```
 
 **Combining the "mode" and "priority" Approaches for Longitudinal Data**
 
 ```{r mode_priority, echo = TRUE}  
 # Combining "mode" with "priority"
-# long_mode_priority <- cata_code(data = long_prep, 
-#                                 id = ID, 
-#                                 categ = Category, 
-#                                 resp = Response, 
-#                                 approach = "mode", 
-#                                 endorse = 1, 
-#                                 time = Wave, 
-#                                 new.name = "Race_Ethnicity", 
-#                                 multi.name = "Multiracial", 
-#                                 priority = c("Black", "Native_American"))
-# 
-# # Display the results
-# table(long_mode_priority$Race_Ethnicity)
+long_mode_priority <- cata_code(data = datalong_prep,
+                                id = ID,
+                                categ = Category,
+                                resp = Response,
+                                approach = "mode",
+                                endorse = 1,
+                                time = Wave,
+                                new.name = "Race_Ethnicity",
+                                multi.name = "Multiracial",
+                                priority = c("Black", "Native_American"))
+
+# Display the results
+table(long_mode_priority$Race_Ethnicity)
 ```
 
 ## 4. Document & Export metadata, tables, and optional visualizations.
 
-Visualizing the distribution of categories can help researchers make informed decisions about coding strategies.
+In addition to comparing the frequency tables with the `table()` function, visualizing the distribution of categories can help researchers make informed decisions about coding strategies. The next version of `CATAcode` will include expanded functionality for creating publication ready tables and figures.
 
 ```{r Visualize, echo = TRUE, message = FALSE, warning = FALSE}
-# library(ggplot2)
-# library(gt)
-# library(patchwork)
-# 
-# # ------------------------------------------------------------
-# # 1.  Summary table of raw category counts
-# # ------------------------------------------------------------
-# raw_counts = cross_prep |>
-#   filter(Response == 1) |>               # keep endorsed rows
-#   count(Category, name = "Count") |>
-#   mutate(Percent = scales::percent(Count / sum(Count), accuracy = 0.1))
-# 
-# # display as a gt table
-# raw_counts |>
-#   arrange(desc(Count)) |>
-#   gt() |>
-#   tab_header(
-#     title = "Raw Category Counts (Cross‑sectional Sample)"
-#   )
-# 
-# # ------------------------------------------------------------
-# # 2.  Bar plot – raw counts
-# # ------------------------------------------------------------
-# plot_raw = raw_counts |>
-#   ggplot(aes(x = reorder(Category, -Count), y = Count)) +
-#   geom_col(fill = "#FB9A99") +
-#   labs(x = "Race/Ethnicity", y = "Count", title = "Raw Category Counts") +
-#   theme_minimal(base_size = 11) +
-#   theme(axis.text.x = element_text(angle = 45, hjust = 1))
-# 
-# # ------------------------------------------------------------
-# # 3.  Bar plot – comparing coded variables
-# # ------------------------------------------------------------
-# # Get counts from the coded data frames created earlier
-# counts_multiple = cross_multiple |>
-#   count(Race_Ethnicity, name = "Count") |>
-#   mutate(Approach = "Multiple")
-# 
-# counts_priority = cross_priority |>
-#   count(Race_Ethnicity, name = "Count") |>
-#   mutate(Approach = "Priority")
-# 
-# plot_counts = bind_rows(counts_multiple, counts_priority) |>
-#   ggplot(aes(x = reorder(Race_Ethnicity, -Count), y = Count,
-#              fill = Approach)) +
-#   geom_col(position = "dodge") +
-#   scale_fill_manual(values = c(Multiple = "#1F78B4",
-#                                Priority  = "#FB9A99")) +
-#   labs(x = "Race/Ethnicity", y = "Count",
-#        title = "Comparing Coding Approaches") +
-#   theme_minimal(base_size = 11) +
-#   theme(axis.text.x = element_text(angle = 45, hjust = 1),
-#         legend.position = "top")
-# 
-# # ------------------------------------------------------------
-# # 4.  Display plots side‑by‑side
-# # ------------------------------------------------------------
-# plot_raw + plot_counts + plot_layout(widths = c(1, 1))
+library(ggplot2)
+
+# Get counts from the coded data frames created earlier
+counts_multiple = cross_multiple |>
+  count(Barrier, name = "Count") |>
+  mutate(Approach = "Multiple")
+
+counts_priority = cross_priority |>
+  count(Barrier, name = "Count") |>
+  mutate(Approach = "Priority")
+
+plot_counts = bind_rows(counts_multiple, counts_priority) |>
+  ggplot(aes(x = reorder(Barrier, -Count), y = Count,
+             fill = Approach)) +
+  geom_col(position = "dodge") +
+  scale_fill_manual(values = c(Multiple = "#1F78B4",
+                               Priority  = "#FB9A99")) +
+  labs(x = "Barrier", y = "Count",
+       title = "Comparing Coding Approaches") +
+  theme_minimal(base_size = 11) +
+  theme(axis.text.x = element_text(angle = 45, hjust = 1),
+        legend.position = "top")
+
 ```
 
-### Recommendations for Using CATAcode
 
-1.  Start by exploring all combinations using the "all" and "counts" approaches.
+
+# Recommendations for Using CATAcode
+
+1.  Start by exploring all combinations using the `"all"` and `"counts"` approaches.
 2.  Retain as much identity nuance as possible where sample size allows.
 3.  Document and justify all subjective decisions for merging or prioritizing categories.
 4.  Include supplemental tables with all category combinations to describe the complete demographic picture.
 5.  Choose coding approaches based on research questions and sample characteristics.
 
 
-### When to Use Each Approach
+## When to Use Each Approach
 
 | Approach   | Best for                                              | Limitations                                                         |
 |------------|-------------------------------------------------------|---------------------------------------------------------------------|
-| `multiple` | Quickly grouping multiracial / multi‑identity cases   | Obscures data when many participants report multiple identities     |
+| `multiple` | Quickly grouping multi‑identity cases   | Obscures data when many participants report multiple identities     |
 | `priority` | Preserving often‑overlooked identities                | Can hide additional endorsed identities                             |
 | `mode`     | Longitudinal data where identity fluctuates over time | Can mask short‑term identity changes                                |
 
-### Conclusion
+## Conclusion
 
-`CATAcode` provides a structured approach to handling CATA demographic items in a transparent and principled manner. By enhancing the precision and inclusivity of demographic data, this package supports more robust social science research that better reflects the lived experiences and health needs of diverse communities. For additional information, see the package documentation by typing **?cata_prep** or **?cata_code** in your R console.
+`CATAcode` provides a structured approach to handling CATA survey items in a transparent and principled manner. By enhancing the precision and inclusivity of data, this package supports more robust social science research that better reflects the lived experiences and health needs of diverse communities. For additional information, see the package documentation by typing `?CATAcode::cata_prep` or `?CATAcode::cata_code` in your R console.
 
 
 

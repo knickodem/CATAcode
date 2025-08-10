@@ -7,6 +7,6 @@
 # * https://testthat.r-lib.org/articles/special-files.html
 
 library(testthat)
-library(catacode)
+library(CATAcode)
 
-test_check("catacode")
+test_check("CATAcode")

@@ -1,25 +1,24 @@
-#' Prepare data for <[`CATAcode`][cata_code]>
+#' Prepare data for [cata_code()]
 #' 
 #' @description
-#' A helper function to transform data into a longer format in preparation for use in <[`catacode`][cata_code]>.
+#' A helper function to transform data into a longer format in preparation for use in [cata_code()].
 #' 
 #' @param data A data frame with rows are subjects or subject by time combinations if `time` is specified.
-#' @param id Column in `data` to uniquely identify each subject.
-#' @param cols <[`tidy-select`][dplyr_tidy_select]> Columns in `data` indicating the check-all-that-apply categories to combine.
+#' @param id The column in `data` to uniquely identify each subject.
+#' @param cols <[`tidy-select`][dplyr_tidy_select]> The columns in `data` indicating the check-all-that-apply categories to combine.
 #' Endorsement of the category should be indicated by the same value (e.g., 1, "Yes") across all columns included here. Columns are
 #' typically dichotomous variables with the two values indicating endorsement or not, but this is not a requirement.
-#' @param time Column in `data` for the time variable.
-#' @param names_to Character. The name for the new column of categories (i.e., names of the `cols` columns), which is passed to <[`tidyr`][pivot_longer]>.
-#' @param values_to Character. The name for the new column of responses (i.e., cell values in the `cols` columns), which is passed to <[`tidyr`][pivot_longer]>.
-#' @param ... Optional additional arguments passed to <[`tidyr`][pivot_longer]>.
+#' @param time The column in `data` for the time variable; used to reshape longitudinal data with multiple observations for each `id`.
+#' @param names_to Character. The name for the new column of categories (i.e., names of the `cols` columns), which is passed to [`pivot_longer()`][tidyr::pivot_longer].
+#' @param values_to Character. The name for the new column of responses (i.e., cell values in the `cols` columns), which is passed to [`pivot_longer()`][tidyr::pivot_longer].
+#' @param ... Optional additional arguments passed to [`pivot_longer()`][tidyr::pivot_longer].
 #' 
 #' @return
 #' An object of the same type as `data` with one row for each `id` (by `time`, if specified) by response category combination.
 #' 
 #' @examples
-#' sources_race
-#' sources_race %>%
-#'   cata_prep(id = ID, cols = Black:White, time = Wave)
+#' data(sources_race)
+#' cata_prep(data = sources_race, id = ID, cols = Black:White, time = Wave)
 #' 
 #' @export
 

@@ -10,7 +10,7 @@
 #' \describe{
 #'   \item{ID}{Subject identification number}
 #'   \item{Wave}{Data collection time point}
-#'   \item{Black - White}{Indicator variables for check-all-that-apply
+#'   \item{Black:White}{Indicator variables for check-all-that-apply
 #'   responses where 1 = endorsement}
 #' }
 #' 
