@@ -19,13 +19,13 @@ cata_code(
 )
 }
 \arguments{
-\item{data}{A data frame with one row for each \code{id} (by \code{time}, if specified) by response category combination.
+\item{data}{A data frame with one row for each \code{id} (by \code{time}, if specified) by category combination.
 If \code{data} are currently in "wide" format where each response category is its own column,
 use \code{\link[=cata_prep]{cata_prep()}} first to transform \code{data}into the proper format. See \emph{Examples}.}
 
 \item{id}{The column in \code{data} to uniquely identify each subject.}
 
-\item{categ}{Column in \code{data} indicating the check-all-that apply categories.}
+\item{categ}{Column in \code{data} indicating the check-all-that apply category labels.}
 
 \item{resp}{Column in \code{data} indicating the check-all-that apply responses.}
 

@@ -1,5 +1,5 @@
 Package: CATAcode
-Title: Explore and code responses to check-all-that-apply survey items
+Title: Explore and Code Responses to Check-All-That-Apply Survey Items
 Version: 1.0.0
 Authors@R: c(
     person(given = "Kyle", family = "Nickodem", email = "kyle.nickodem@gmail.com", role = c("aut", "cre"),

@@ -15,17 +15,17 @@ cata_prep(
 )
 }
 \arguments{
-\item{data}{A data frame with rows are subjects or subject by time combinations if \code{time} is specified.}
+\item{data}{A data frame where rows are subjects or subject by time combinations if \code{time} is specified.}
 
 \item{id}{The column in \code{data} to uniquely identify each subject.}
 
-\item{cols}{<\code{\link[=dplyr_tidy_select]{tidy-select}}> The columns in \code{data} indicating the check-all-that-apply categories to combine.
+\item{cols}{<\code{\link[dplyr:dplyr_tidy_select]{tidy-select}}> The columns in \code{data} indicating the check-all-that-apply categories to combine.
 Endorsement of the category should be indicated by the same value (e.g., 1, "Yes") across all columns included here. Columns are
 typically dichotomous variables with the two values indicating endorsement or not, but this is not a requirement.}
 
 \item{time}{The column in \code{data} for the time variable; used to reshape longitudinal data with multiple observations for each \code{id}.}
 
-\item{names_to}{Character. The name for the new column of categories (i.e., names of the \code{cols} columns), which is passed to \code{\link[tidyr:pivot_longer]{pivot_longer()}}.}
+\item{names_to}{Character. The name for the new column of category labels (i.e., names of the \code{cols} columns), which is passed to \code{\link[tidyr:pivot_longer]{pivot_longer()}}.}
 
 \item{values_to}{Character. The name for the new column of responses (i.e., cell values in the \code{cols} columns), which is passed to \code{\link[tidyr:pivot_longer]{pivot_longer()}}.}
 

@@ -15,6 +15,6 @@
 #' }
 #' 
 #' 
-#' @source <https://doi.org/10.15139/S3/EZ8ILC>
+#' @source \doi{doi:10.15139/S3/EZ8ILC}
 #'
 "sources_race"

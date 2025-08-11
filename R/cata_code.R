@@ -5,12 +5,12 @@
 #' to combine responses to multiple categories from a check-all-that-apply 
 #' survey question into a single variable.
 #' 
-#' @param data A data frame with one row for each `id` (by `time`, if specified) by response category combination. 
+#' @param data A data frame with one row for each `id` (by `time`, if specified) by category combination. 
 #' If `data` are currently in "wide" format where each response category is its own column, 
 #' use [cata_prep()] first to transform `data`into the proper format. See _Examples_.
 #' 
 #' @inheritParams cata_prep
-#' @param categ Column in `data` indicating the check-all-that apply categories.
+#' @param categ Column in `data` indicating the check-all-that apply category labels.
 #' @param resp Column in `data` indicating the check-all-that apply responses.
 #' @param approach One of "all", "count", "multiple", "priority", or "mode". See _Details_.
 #' @param endorse The value in `resp` indicating endorsement of the category in `categ`. This must be the same for all categories.

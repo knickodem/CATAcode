@@ -6,3 +6,6 @@
 .Rhistory
 .gitignore
 tests/
+^_pkgdown\.yml$
+^docs$
+^pkgdown$

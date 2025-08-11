@@ -14,7 +14,7 @@ responses where 1 = endorsement}
 }
 }
 \source{
-\url{https://doi.org/10.15139/S3/EZ8ILC}
+\doi{doi:10.15139/S3/EZ8ILC}
 }
 \usage{
 sources_race
