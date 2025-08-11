@@ -1,3 +1,3 @@
-# CATAcode (development version)
+# CATAcode 1.0.0
 
 * Initial CRAN submission.

@@ -3,6 +3,7 @@
 export(cata_code)
 export(cata_prep)
 import(dplyr)
+import(ggplot2)
 import(rlang)
 importFrom(tidyr,pivot_longer)
 importFrom(tidyr,pivot_wider)

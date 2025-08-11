@@ -9,7 +9,7 @@ A data frame with 16,922 rows and 9 columns:
 \describe{
 \item{ID}{Subject identification number}
 \item{Wave}{Data collection time point}
-\item{Black:White}{Indicator variables for check-all-that-apply
+\item{Black, Native_American, Asian, Hispanic, Multiracial, Pacific_Islander, White}{Indicator variables for check-all-that-apply
 responses where 1 = endorsement}
 }
 }

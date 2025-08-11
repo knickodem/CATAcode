@@ -9,6 +9,7 @@
 
 #' @import rlang
 #' @import dplyr
+#' @import ggplot2
 #' @importFrom tidyr pivot_wider
 #' @importFrom tidyr pivot_longer
 #' @importFrom tidyr unite

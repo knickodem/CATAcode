@@ -1,3 +1,8 @@
-^catacode\.Rproj$
+^CATAcode\.Rproj$
 ^\.Rproj\.user$
 ^LICENSE\.md$
+^cran-comments\.md$
+^README.Rmd
+.Rhistory
+.gitignore
+tests/

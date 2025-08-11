@@ -330,7 +330,7 @@ table(long_mode_priority$Race_Ethnicity)
 
 In addition to comparing the frequency tables with the `table()` function, visualizing the distribution of categories can help researchers make informed decisions about coding strategies. The next version of `CATAcode` will include expanded functionality for creating publication ready tables and figures.
 
-```{r Visualize, echo = TRUE, message = FALSE, warning = FALSE}
+```{r Visualize, echo = TRUE, message = FALSE, warning = FALSE, results='asis'}
 library(ggplot2)
 
 # Get counts from the coded data frames created earlier
@@ -353,6 +353,7 @@ plot_counts = bind_rows(counts_multiple, counts_priority) |>
   theme_minimal(base_size = 11) +
   theme(axis.text.x = element_text(angle = 45, hjust = 1),
         legend.position = "top")
+plot_counts
 
 ```
 

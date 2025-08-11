@@ -1,15 +1,15 @@
 Package: CATAcode
 Title: Explore and code responses to check-all-that-apply survey items
-Version: 0.0.0.9000
+Version: 1.0.0
 Authors@R: c(
     person(given = "Kyle", family = "Nickodem", email = "kyle.nickodem@gmail.com", role = c("aut", "cre"),
            comment = c(ORCID = "0000-0003-4976-3378")),
     person(given = "Gabriel J.", family = "Merrin", email = "gjmerrin@syr.edu", role = "aut")
            )
 Description: Analyzing responses to check-all-that-apply survey items often requires 
-    data transformations and subjective decisions for combining categories. 'catacode'
+    data transformations and subjective decisions for combining categories. 'CATAcode'
     contains tools for exploring response patterns, facilitating data transformations, 
-    applying a set of decision rules for coding responses, and summarizing response frequencies.
+    applying a set of decision rules for coding responses, and summarizing response frequencies (Merrin et al., under review).
 License: GPL (>= 3)
 URL: https://github.com/knickodem/CATAcode
 BugReports: https://github.com/knickodem/CATAcode/issues
@@ -25,7 +25,9 @@ Suggests:
     rmarkdown,
     testthat (>= 3.0.0)
 Encoding: UTF-8
+LazyData: true
 Roxygen: list(markdown = TRUE)
 RoxygenNote: 7.2.3
 Config/testthat/edition: 3
 VignetteBuilder: knitr
+
