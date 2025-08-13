@@ -3,8 +3,8 @@
 #' @description
 #' A helper function to transform data into a longer format in preparation for use in [cata_code()].
 #' 
-#' @param data A data frame where rows are subjects or subject by time combinations if `time` is specified.
-#' @param id The column in `data` to uniquely identify each subject.
+#' @param data A data frame where rows are participants or participant by time combinations if `time` is specified.
+#' @param id The column in `data` to uniquely identify each participant.
 #' @param cols <[`tidy-select`][dplyr::dplyr_tidy_select]> The columns in `data` indicating the check-all-that-apply categories to combine.
 #' Endorsement of the category should be indicated by the same value (e.g., 1, "Yes") across all columns included here. Columns are
 #' typically dichotomous variables with the two values indicating endorsement or not, but this is not a requirement.

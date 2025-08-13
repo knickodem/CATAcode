@@ -23,7 +23,7 @@ cata_code(
 If \code{data} are currently in "wide" format where each response category is its own column,
 use \code{\link[=cata_prep]{cata_prep()}} first to transform \code{data}into the proper format. See \emph{Examples}.}
 
-\item{id}{The column in \code{data} to uniquely identify each subject.}
+\item{id}{The column in \code{data} to uniquely identify each participant.}
 
 \item{categ}{Column in \code{data} indicating the check-all-that apply category labels.}
 
@@ -41,7 +41,7 @@ response categories when \code{approach} is "priority" or "mode".}
 
 \item{new.name}{Character; column name for the created variable.}
 
-\item{multi.name}{Character; value given to subjects with multiple category endorsements when \code{approach \%in\% c("multiple", "priority", "mode")}.}
+\item{multi.name}{Character; value given to participants with multiple category endorsements when \code{approach \%in\% c("multiple", "priority", "mode")}.}
 
 \item{sep}{Character; separator to use between values when \code{approach = "all"}.}
 }
@@ -54,7 +54,7 @@ to combine responses to multiple categories from a check-all-that-apply
 survey question into a single variable.
 }
 \details{
-For all \code{approach} options, subjects with missing data for all categories in \code{categ} are removed and not present in the output.
+For all \code{approach} options, participants with missing data for all categories in \code{categ} are removed and not present in the output.
 
 There are two options for \code{approach} that provide summary information rather than a single code for each \code{id}.
 
@@ -68,19 +68,20 @@ a category. Only categories with >= 1 endorsement are included for a particular 
 is ignored and instead assumes \code{data} is in longer format with a row for each \code{id} by \code{time} combination. If not,
 the column of counts will be 1 for all rows.
 
-The three remaining options for \code{approach} produce a single code for each \code{id}. The output is a data frame with one row for each \code{id}.
-The choice of approach is only relevant for subjects
-who selected more than one category whereas subjects who only selected one category will be given
-that code in the output regardless of which approach is chosen.
+The three remaining options for \code{approach} produce a single code for each \code{id}.
+The output is a data frame with one row for each \code{id}. The choice of approach is
+only relevant for participants who selected more than one category whereas
+participants who only selected one category will be given that code in the output
+regardless of which approach is chosen.
 
-*\code{"multiple"} If subject endorsed multiple categories within or across time, code as \code{multi.name}.
+*\code{"multiple"} If participant endorsed multiple categories within or across time, code as \code{multi.name}.
 
-*\code{"priority"} Same as "multiple" unless subject endorsed category in \code{priority} argument at any point.
+*\code{"priority"} Same as "multiple" unless participant endorsed category in \code{priority} argument at any point.
 If so, then code in order specified in \code{priority}.
 
-*\code{"mode"} Subject is coded as the category with the mode (i.e., most common) endorsement across all time points.
-Ties are coded as "Multiple". If the \code{priority} argument is specified, these categories are prioritized
-first, followed by the mode response. The \code{"mode"} approach is only relevant is \code{time} is specified.
+*\code{"mode"} Participant is coded as the category with the mode (i.e., most common) endorsement across all time points.
+Ties are coded as as the value given in \code{multi.name}. If the \code{priority} argument is specified, these categories are prioritized
+first, followed by the mode response. The \code{"mode"} approach is only relevant if \code{time} is specified.
 When \code{time = NULL} it operates as \code{"priority"} (when specified) or \code{"multiple"}.
 }
 \examples{

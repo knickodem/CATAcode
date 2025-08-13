@@ -18,13 +18,13 @@
 #' @param priority Character vector of one or more categories in the `categ` column indicating the order to prioritize 
 #' response categories when `approach` is "priority" or "mode".
 #' @param new.name Character; column name for the created variable.
-#' @param multi.name Character; value given to subjects with multiple category endorsements when `approach %in% c("multiple", "priority", "mode")`.
+#' @param multi.name Character; value given to participants with multiple category endorsements when `approach %in% c("multiple", "priority", "mode")`.
 #' @param sep Character; separator to use between values when `approach = "all"`.
 #' 
 #' @return `data.frame`
 #' 
 #' @details 
-#' For all `approach` options, subjects with missing data for all categories in `categ` are removed and not present in the output.
+#' For all `approach` options, participants with missing data for all categories in `categ` are removed and not present in the output.
 #' 
 #' There are two options for `approach` that provide summary information rather than a single code for each `id`.
 #' 
@@ -38,19 +38,20 @@
 #' is ignored and instead assumes `data` is in longer format with a row for each `id` by `time` combination. If not,
 #' the column of counts will be 1 for all rows.
 #' 
-#' The three remaining options for `approach` produce a single code for each `id`. The output is a data frame with one row for each `id`.
-#' The choice of approach is only relevant for subjects
-#' who selected more than one category whereas subjects who only selected one category will be given
-#' that code in the output regardless of which approach is chosen.
+#' The three remaining options for `approach` produce a single code for each `id`. 
+#' The output is a data frame with one row for each `id`. The choice of approach is 
+#' only relevant for participants who selected more than one category whereas 
+#' participants who only selected one category will be given that code in the output 
+#' regardless of which approach is chosen.
 #' 
-#' *`"multiple"` If subject endorsed multiple categories within or across time, code as `multi.name`.
+#' *`"multiple"` If participant endorsed multiple categories within or across time, code as `multi.name`.
 #' 
-#' *`"priority"` Same as "multiple" unless subject endorsed category in `priority` argument at any point. 
+#' *`"priority"` Same as "multiple" unless participant endorsed category in `priority` argument at any point. 
 #' If so, then code in order specified in `priority`.
 #' 
-#' *`"mode"` Subject is coded as the category with the mode (i.e., most common) endorsement across all time points. 
-#' Ties are coded as "Multiple". If the `priority` argument is specified, these categories are prioritized 
-#' first, followed by the mode response. The `"mode"` approach is only relevant is `time` is specified.
+#' *`"mode"` Participant is coded as the category with the mode (i.e., most common) endorsement across all time points. 
+#' Ties are coded as as the value given in `multi.name`. If the `priority` argument is specified, these categories are prioritized 
+#' first, followed by the mode response. The `"mode"` approach is only relevant if `time` is specified.
 #' When `time = NULL` it operates as `"priority"` (when specified) or `"multiple"`.
 #' 
 #' @examples
@@ -105,17 +106,17 @@ cata_code <- function(data, id, categ, resp, approach,
       tidyr::pivot_wider(names_from = {{categ}}, values_from = {{resp}}) %>%      # Pivot data to wider format with one row for each id x time combination
       tidyr::unite(col = "new", all_of(cats), 
                    remove = TRUE, na.rm = TRUE, sep = sep) %>%  # remove = FALSE allows us to examine if the uniting worked
-      dplyr::mutate(new = ifelse(new == "", NA, new))           # If subject responded NA to all categories for all waves, code as NA rather than ""
+      dplyr::mutate(new = ifelse(new == "", NA, new))           # If participant responded NA to all categories for all waves, code as NA rather than ""
     # Note: Combinations are currently in the order in which the variable appears in data
   }
   
   if(approach %in% c("counts", "multiple", "priority", "mode")){
     
-    ## Summarizes each subject's response pattern
+    ## Summarizes each participant's response pattern
     counts <- data %>% 
       dplyr::filter({{resp}} == endorse) %>%                    
       dplyr::group_by({{id}}, {{categ}}) %>%
-      dplyr::summarize(n_time = dplyr::n(),   # number of times a subject identified as a certain category
+      dplyr::summarize(n_time = dplyr::n(),   # number of times a participant identified as a certain category
                        .groups = "drop_last") # keeps group by id for use in remaining approaches
     
     if(approach == "counts"){

@@ -15,9 +15,9 @@ cata_prep(
 )
 }
 \arguments{
-\item{data}{A data frame where rows are subjects or subject by time combinations if \code{time} is specified.}
+\item{data}{A data frame where rows are participants or participant by time combinations if \code{time} is specified.}
 
-\item{id}{The column in \code{data} to uniquely identify each subject.}
+\item{id}{The column in \code{data} to uniquely identify each participant.}
 
 \item{cols}{<\code{\link[dplyr:dplyr_tidy_select]{tidy-select}}> The columns in \code{data} indicating the check-all-that-apply categories to combine.
 Endorsement of the category should be indicated by the same value (e.g., 1, "Yes") across all columns included here. Columns are

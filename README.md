@@ -3,24 +3,30 @@
 
 **Principled Approaches to Coding Check-All-That-Apply Responses**
 
-Accurately measuring, reporting, interpreting, and evaluating identity categories in social science research is essential. However, check-all-that-apply (CATA) responses 
-(e.g., race/ethnicity, gender identity, sexual orientation, health conditions) present methodological challenges due to the large permutations of categories and the 
-fluctuating salience of intersecting responses across time and contexts. These challenges can hinder the validity of quantitative studies, especially those addressing social 
-identity differences. 
+"Which of the following have happened to you? Check all that apply." 
 
-`CATAcode` provides structured, transparent, and reproducible workflows for handling the challenges posed by CATA responses. The package is specifically designed to assist 
+* Felt overwhelmed by a huge number of response combinations
+* Unsure how to use these combinations in an analysis (e.g., regression)
+* Had to lump multiple small categories into an uninterpretable "Other" category
+* Worried about misrepresenting participants' responses
+
+
+Check-all-that-apply (CATA) survey items -- alternatively formatted as a set of forced choice yes/no items -- present numerous methodological challenges for
+summarizing responses and appropriately representing complex responses in subsequent analyses. Nonetheless, accurately measuring, reporting, 
+interpreting, and evaluating responses, particularly regarding participant identity (e.g., race/ethnicity, health conditions), is essential in 
+social science, health science, and consumer research.
+
+
+**CATAcode** provides structured, transparent, and reproducible workflows for handling the challenges posed by CATA responses. The package is specifically designed to assist 
 researchers in exploring CATA responses for summary descriptives and preparing CATA items for statistical modeling. Applying this tool to cross-sectional and longitudinal 
 data can help enhance the generalizability, transparency, and reproducibility of your research.
 
 **Key Features**
 
-•	Explore all identity combinations in your data to understand the complexity of participant responses
-
-•	Handle cross-sectional and longitudinal data with specialized functions for each context
-
-•	Multiple coding approaches to choose from (e.g., multiple, priority, and mode)
-
-•	Transparent documentation of subjective coding decisions
+*	Explore all response combinations to CATA items to understand the complexity of participant responses
+*	Handle cross-sectional and longitudinal data with specialized functions for each context
+*	Multiple coding approaches to choose from (e.g., multiple, priority, and mode)
+*	Transparent documentation of subjective coding decisions
 
 You can install the released version of `CATAcode` from CRAN with:
 
@@ -40,24 +46,24 @@ Once installed, load the package:
 library(CATAcode)
 ```
 
-**Why use CATAcode?**
+**Why use CATAcode to understand participant demographics?**
 
 *Traditional approaches to CATA demographic items often:*
 
-•	Collapse multiracial participants into heterogeneous "Other" categories
+* Collapse participants with multiple identities into heterogeneous "Other" categories
 
-•	Ignore participants who select multiple identities
+* Ignore participants who select multiple identities
 
-•	Lack transparency in coding decisions
+* Lack transparency in coding decisions
 
-•	Fail to capture identity fluidity over time
+* Fail to capture identity fluidity over time
 
 *CATAcode addresses these issues by:*
 
-•	Providing structured exploration of all identity combinations
+* Providing structured exploration of all identity combinations
 
-•	Offering principled approaches for category assignment
+* Offering principled approaches for category assignment
 
-•	Encouraging transparent documentation of subjective decisions
+* Encouraging transparent documentation of subjective decisions
 
-•	Supporting both cross-sectional and longitudinal analyses
+* Supporting both cross-sectional and longitudinal analyses

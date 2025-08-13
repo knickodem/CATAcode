@@ -4,7 +4,7 @@ resource_files:
   - img/cata_logo.png 
 output: rmarkdown::html_vignette
 vignette: >
-  %\VignetteIndexEntry{CATAcode-overview}
+  %\VignetteIndexEntry{CATAcode Overview}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 ---
@@ -25,11 +25,11 @@ library(dplyr)
 
 # Introduction to `CATAcode`
 
-Check-all-that-apply (CATA) responses present methodological challenges due to the large permutations of categories and the fluctuating salience of intersecting responses across time and contexts. In particular, accurately measuring, reporting, interpreting, and evaluating identity categories in social science research is essential. These challenges can hinder the validity of quantitative studies, especially those addressing social identity differences.
+Check-all-that-apply (CATA) items present numerous methodological challenges that can hinder the validity of survey research. In particular, accurately measuring, reporting, interpreting, and evaluating participants' identities is essential. 
 
 `CATAcode` is an R package designed to assist researchers in exploring CATA responses for summary descriptives and and preparing CATA items for statistical modeling. Applying this tool to cross-sectional and longitudinal data can help enhance the generalizability, transparency, and reproducibility of your research.
 
-In surveys, a CATA item can also be structured as a series of forced choice dichotomous items (e.g., Yes/No). For instance, for an evaluation of their program graduate students were asked, "Have you experienced any of these barriers to conducting research?", with 5 options of: lack of funding, lack of mentorship, lack of research infrastructure (e.g., software), lack of time capacity, and other barriers. The survey could either instruct responses to CATA or to explicitly select Yes or No to each option. The `CATAcode` package is suitable for analyzing data from both approaches.
+In surveys, a CATA item can also be structured as a series of forced choice dichotomous items (e.g., Yes/No). For instance, for an evaluation of their program graduate students were asked, *"Have you experienced any of these barriers to conducting research?"*, with 5 options of: lack of funding, lack of mentorship, lack of research infrastructure (e.g., software), lack of time capacity, and other barriers. The survey could either instruct responses to CATA or to explicitly select Yes or No to each option. The `CATAcode` package is suitable for analyzing data from both CATA and forced choice formats.
 
 This vignette demonstrates how to use the `CATAcode` package to:
 
@@ -147,7 +147,7 @@ Its jobs are to:
   * For longitudinal data, provide the column indicating the time so `cata_prep()` keeps observations from different time points separate.
 
 
-***After this call, the new data will be a tidy long dataframe with three or four standardized columns: id, Category, Response, and time if supplied.***
+***After this call, the new data will be a tidy long dataframe with three or four standardized columns: id, Category, Response, and time (if supplied).***
 
 ```{r cata_prep, echo = TRUE}
 # Prepare cross-sectional 
@@ -236,7 +236,8 @@ head(long_counts)
 
 The "multiple" approach automatically combines individuals who have reported **two or more categories** into the same group.
 
-A new argument to name the new category 
+A new argument to name the new category:
+
 * multi.name = "Multiple"
   * What to call the catch‑all group of people who checked 2+ boxes.
 
@@ -330,7 +331,9 @@ table(long_mode_priority$Race_Ethnicity)
 
 In addition to comparing the frequency tables with the `table()` function, visualizing the distribution of categories can help researchers make informed decisions about coding strategies. The next version of `CATAcode` will include expanded functionality for creating publication ready tables and figures.
 
-```{r Visualize, echo = TRUE, message = FALSE, warning = FALSE, results='asis'}
+Let's compare how the response frequencies change with the multiple approach and prioritizing mentorship and infrastructure in the cross-sectional data.
+
+```{r Visualize, echo = TRUE, message = FALSE, warning = FALSE, results='asis', fig.height=3, fig.width=6}
 library(ggplot2)
 
 # Get counts from the coded data frames created earlier
@@ -342,7 +345,8 @@ counts_priority = cross_priority |>
   count(Barrier, name = "Count") |>
   mutate(Approach = "Priority")
 
-plot_counts = bind_rows(counts_multiple, counts_priority) |>
+# Display in a figure
+cross_plot = bind_rows(counts_multiple, counts_priority) |>
   ggplot(aes(x = reorder(Barrier, -Count), y = Count,
              fill = Approach)) +
   geom_col(position = "dodge") +
@@ -353,11 +357,39 @@ plot_counts = bind_rows(counts_multiple, counts_priority) |>
   theme_minimal(base_size = 11) +
   theme(axis.text.x = element_text(angle = 45, hjust = 1),
         legend.position = "top")
-plot_counts
+cross_plot
 
 ```
 
+We can also compare the mode approach and the mode with priority approach in the longitudinal data.
 
+```{r visualize_long, echo = TRUE, message = FALSE, warning = FALSE, results='asis', fig.height=3, fig.width=6}
+library(ggplot2)
+
+# Get counts from the coded data frames created earlier
+counts_mode = long_mode|>
+  count(Race_Ethnicity, name = "Count") |>
+  mutate(Approach = "Mode")
+
+counts_mwp = long_mode_priority |>
+  count(Race_Ethnicity, name = "Count") |>
+  mutate(Approach = "Mode with Priority")
+
+# Display in a figure
+long_plot = bind_rows(counts_mode, counts_mwp) |>
+  ggplot(aes(x = reorder(Race_Ethnicity, -Count), y = Count,
+             fill = Approach)) +
+  geom_col(position = "dodge") +
+  scale_fill_manual(values = c(Mode = "#1F78B4",
+                               `Mode with Priority`  = "#FB9A99")) +
+  labs(x = "Race/Ethnicity", y = "Count",
+       title = "Comparing Coding Approaches") +
+  theme_minimal(base_size = 11) +
+  theme(axis.text.x = element_text(angle = 45, hjust = 1),
+        legend.position = "top")
+long_plot
+
+```
 
 # Recommendations for Using CATAcode
 
@@ -378,7 +410,7 @@ plot_counts
 
 ## Conclusion
 
-`CATAcode` provides a structured approach to handling CATA survey items in a transparent and principled manner. By enhancing the precision and inclusivity of data, this package supports more robust social science research that better reflects the lived experiences and health needs of diverse communities. For additional information, see the package documentation by typing `?CATAcode::cata_prep` or `?CATAcode::cata_code` in your R console.
+`CATAcode` provides a structured approach to handling CATA survey items in a transparent and principled manner. By enhancing the precision and inclusivity of data, this package supports more robust health and social science research that better reflects the lived experiences and health needs of diverse communities. For additional information, see the package documentation by typing `?CATAcode::cata_prep` or `?CATAcode::cata_code` in your R console.
 
 
 
