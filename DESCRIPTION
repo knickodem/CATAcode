@@ -1,5 +1,5 @@
 Package: CATAcode
-Title: Explore and Code Responses to Check-All-That-Apply Survey Items
+Title: Explore and Code Responses to Check-All-that-Apply Survey Items
 Version: 1.0.0
 Authors@R: c(
     person(given = "Kyle", family = "Nickodem", email = "kyle.nickodem@gmail.com", role = c("aut", "cre"),
@@ -9,7 +9,7 @@ Authors@R: c(
 Description: Analyzing responses to check-all-that-apply survey items often requires 
     data transformations and subjective decisions for combining categories. 'CATAcode'
     contains tools for exploring response patterns, facilitating data transformations, 
-    applying a set of decision rules for coding responses, and summarizing response frequencies (Merrin et al., under review).
+    applying a set of decision rules for coding responses, and summarizing response frequencies.
 License: GPL (>= 3)
 URL: https://github.com/knickodem/CATAcode
 BugReports: https://github.com/knickodem/CATAcode/issues

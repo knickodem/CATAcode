@@ -63,7 +63,8 @@
 #' all <- cata_code(sources_long, id = ID, categ = Category, resp = Response,
 #' approach = "all", time = Wave, new.name = "Race_Ethnicity")
 #' unique(all$Race_Ethnicity)
-#'   
+#' 
+#' \donttest{  
 #' # Coding endorsement of multiple categories as "Multiple
 #' multiple <- cata_code(sources_long, id = ID, categ = Category, resp = Response,
 #' approach = "multiple", time = Wave, new.name = "Race_Ethnicity")
@@ -83,6 +84,7 @@
 #' table(multiple$Race_Ethnicity)
 #' table(priority$Race_Ethnicity)
 #' table(mode$Race_Ethnicity)
+#' }
 #' 
 #' @export
 

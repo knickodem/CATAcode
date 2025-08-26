@@ -4,7 +4,7 @@
 \name{CATAcode}
 \alias{CATAcode}
 \alias{CATAcode-package}
-\title{CATAcode: Explore and Code Responses to Check-All-That-Apply Survey Items}
+\title{CATAcode: Explore and Code Responses to Check-All-that-Apply Survey Items}
 \description{
 Analyzing responses to check-all-that-apply survey items often requires
 data transformations and subjective decisions for combining categories. CATAcode

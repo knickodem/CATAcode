@@ -3,6 +3,10 @@
 
 **Principled Approaches to Coding Check-All-That-Apply Responses**
 
+[![CRAN_Status_Badge](https://www.r-pkg.org/badges/version/CATAcode)](https://cran.r-project.org/package=CATAcode)
+[![metacrandownloads](https://cranlogs.r-pkg.org/badges/CATAcode)](https://cran.r-project.org/package=CATAcode)
+[![metacrandownloads](https://cranlogs.r-pkg.org/badges/grand-total/CATAcode)](https://cran.r-project.org/package=CATAcode)
+
 "Which of the following have happened to you? Check all that apply." 
 
 * Felt overwhelmed by a huge number of response combinations
