@@ -11,7 +11,7 @@ Description: Analyzing responses to check-all-that-apply survey items often requ
     contains tools for exploring response patterns, facilitating data transformations, 
     applying a set of decision rules for coding responses, and summarizing response frequencies.
 License: GPL (>= 3)
-URL: https://github.com/knickodem/CATAcode
+URL: https://github.com/knickodem/CATAcode, https://knickodem.github.io/CATAcode/
 BugReports: https://github.com/knickodem/CATAcode/issues
 Depends: 
     R (>= 3.6)
@@ -30,4 +30,3 @@ Roxygen: list(markdown = TRUE)
 RoxygenNote: 7.2.3
 Config/testthat/edition: 3
 VignetteBuilder: knitr
-
