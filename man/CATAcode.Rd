@@ -15,6 +15,7 @@ applying a set of decision rules for coding responses, and summarizing response 
 Useful links:
 \itemize{
   \item \url{https://github.com/knickodem/CATAcode}
+  \item \url{https://knickodem.github.io/CATAcode/}
   \item Report bugs at \url{https://github.com/knickodem/CATAcode/issues}
 }
 
