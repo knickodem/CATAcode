@@ -79,15 +79,15 @@ use <code><a href="cata_prep.html">cata_prep()</a></code> first to transform <co
 
 
 <dt id="arg-categ">categ<a class="anchor" aria-label="anchor" href="#arg-categ"></a></dt>
-<dd><p>Column in <code>data</code> indicating the check-all-that apply category labels.</p></dd>
+<dd><p>Unquoted column in <code>data</code> indicating the check-all-that apply category labels.</p></dd>
 
 
 <dt id="arg-resp">resp<a class="anchor" aria-label="anchor" href="#arg-resp"></a></dt>
-<dd><p>Column in <code>data</code> indicating the check-all-that apply responses.</p></dd>
+<dd><p>Unquoted column in <code>data</code> indicating the check-all-that apply responses.</p></dd>
 
 
 <dt id="arg-approach">approach<a class="anchor" aria-label="anchor" href="#arg-approach"></a></dt>
-<dd><p>One of "all", "count", "multiple", "priority", or "mode". See <em>Details</em>.</p></dd>
+<dd><p>One of "all", "counts", "multiple", "priority", or "mode". See <em>Details</em>.</p></dd>
 
 
 <dt id="arg-endorse">endorse<a class="anchor" aria-label="anchor" href="#arg-endorse"></a></dt>
@@ -124,11 +124,11 @@ response categories when <code>approach</code> is "priority" or "mode".</p></dd>
     <h2 id="details">Details<a class="anchor" aria-label="anchor" href="#details"></a></h2>
     <p>For all <code>approach</code> options, participants with missing data for all categories in <code>categ</code> are removed and not present in the output.</p>
 <p>There are two options for <code>approach</code> that provide summary information rather than a single code for each <code>id</code>.</p>
-<p>*<code>"all"</code> returns a data frame with <code>new.name</code> variable comprised of all categories
+<p><code>"all"</code> returns a data frame with <code>new.name</code> variable comprised of all categories
 endorsed by separated by <code>sep</code>. The <code>time</code> argument is ignored when <code>approach = "all"</code>. Rather,
 if <code>data</code> includes a column for time, then output includes a row for each <code>id</code> at each time point.
 This approach is a useful exploratory first step for identifying all of the response patterns present in the data.</p>
-<p>*<code>"counts"</code> is only relevant for longitudinal data and returns a data frame with the number of times an <code>id</code> endorsed
+<p><code>"counts"</code> is only relevant for longitudinal data and returns a data frame with the number of times an <code>id</code> endorsed
 a category. Only categories with &gt;= 1 endorsement are included for a particular <code>id</code>. As with <code>"all"</code>, the <code>time</code> argument
 is ignored and instead assumes <code>data</code> is in longer format with a row for each <code>id</code> by <code>time</code> combination. If not,
 the column of counts will be 1 for all rows.</p>
@@ -137,10 +137,10 @@ The output is a data frame with one row for each <code>id</code>. The choice of 
 only relevant for participants who selected more than one category whereas
 participants who only selected one category will be given that code in the output
 regardless of which approach is chosen.</p>
-<p>*<code>"multiple"</code> If participant endorsed multiple categories within or across time, code as <code>multi.name</code>.</p>
-<p>*<code>"priority"</code> Same as "multiple" unless participant endorsed category in <code>priority</code> argument at any point.
+<p><code>"multiple"</code> If participant endorsed multiple categories within or across time, code as <code>multi.name</code>.</p>
+<p><code>"priority"</code> Same as "multiple" unless participant endorsed category in <code>priority</code> argument at any point.
 If so, then code in order specified in <code>priority</code>.</p>
-<p>*<code>"mode"</code> Participant is coded as the category with the mode (i.e., most common) endorsement across all time points.
+<p><code>"mode"</code> Participant is coded as the category with the mode (i.e., most common) endorsement across all time points.
 Ties are coded as as the value given in <code>multi.name</code>. If the <code>priority</code> argument is specified, these categories are prioritized
 first, followed by the mode response. The <code>"mode"</code> approach is only relevant if <code>time</code> is specified.
 When <code>time = NULL</code> it operates as <code>"priority"</code> (when specified) or <code>"multiple"</code>.</p>
