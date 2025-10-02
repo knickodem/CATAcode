@@ -10,9 +10,9 @@
 #' use [cata_prep()] first to transform `data`into the proper format. See _Examples_.
 #' 
 #' @inheritParams cata_prep
-#' @param categ Column in `data` indicating the check-all-that apply category labels.
-#' @param resp Column in `data` indicating the check-all-that apply responses.
-#' @param approach One of "all", "count", "multiple", "priority", or "mode". See _Details_.
+#' @param categ Unquoted column in `data` indicating the check-all-that apply category labels.
+#' @param resp Unquoted column in `data` indicating the check-all-that apply responses.
+#' @param approach One of "all", "counts", "multiple", "priority", or "mode". See _Details_.
 #' @param endorse The value in `resp` indicating endorsement of the category in `categ`. This must be the same for all categories.
 #' Common values are 1 (default), "yes", TRUE, or 2 (for SPSS data).
 #' @param priority Character vector of one or more categories in the `categ` column indicating the order to prioritize 
@@ -28,12 +28,12 @@
 #' 
 #' There are two options for `approach` that provide summary information rather than a single code for each `id`.
 #' 
-#' *`"all"` returns a data frame with `new.name` variable comprised of all categories 
+#' `"all"` returns a data frame with `new.name` variable comprised of all categories 
 #' endorsed by separated by `sep`. The `time` argument is ignored when `approach = "all"`. Rather,
 #' if `data` includes a column for time, then output includes a row for each `id` at each time point.
 #' This approach is a useful exploratory first step for identifying all of the response patterns present in the data.
 #' 
-#' *`"counts"` is only relevant for longitudinal data and returns a data frame with the number of times an `id` endorsed
+#' `"counts"` is only relevant for longitudinal data and returns a data frame with the number of times an `id` endorsed
 #' a category. Only categories with >= 1 endorsement are included for a particular `id`. As with `"all"`, the `time` argument
 #' is ignored and instead assumes `data` is in longer format with a row for each `id` by `time` combination. If not,
 #' the column of counts will be 1 for all rows.
@@ -44,12 +44,12 @@
 #' participants who only selected one category will be given that code in the output 
 #' regardless of which approach is chosen.
 #' 
-#' *`"multiple"` If participant endorsed multiple categories within or across time, code as `multi.name`.
+#' `"multiple"` If participant endorsed multiple categories within or across time, code as `multi.name`.
 #' 
-#' *`"priority"` Same as "multiple" unless participant endorsed category in `priority` argument at any point. 
+#' `"priority"` Same as "multiple" unless participant endorsed category in `priority` argument at any point. 
 #' If so, then code in order specified in `priority`.
 #' 
-#' *`"mode"` Participant is coded as the category with the mode (i.e., most common) endorsement across all time points. 
+#' `"mode"` Participant is coded as the category with the mode (i.e., most common) endorsement across all time points. 
 #' Ties are coded as as the value given in `multi.name`. If the `priority` argument is specified, these categories are prioritized 
 #' first, followed by the mode response. The `"mode"` approach is only relevant if `time` is specified.
 #' When `time = NULL` it operates as `"priority"` (when specified) or `"multiple"`.

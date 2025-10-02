@@ -25,11 +25,11 @@ use \code{\link[=cata_prep]{cata_prep()}} first to transform \code{data}into the
 
 \item{id}{The column in \code{data} to uniquely identify each participant.}
 
-\item{categ}{Column in \code{data} indicating the check-all-that apply category labels.}
+\item{categ}{Unquoted column in \code{data} indicating the check-all-that apply category labels.}
 
-\item{resp}{Column in \code{data} indicating the check-all-that apply responses.}
+\item{resp}{Unquoted column in \code{data} indicating the check-all-that apply responses.}
 
-\item{approach}{One of "all", "count", "multiple", "priority", or "mode". See \emph{Details}.}
+\item{approach}{One of "all", "counts", "multiple", "priority", or "mode". See \emph{Details}.}
 
 \item{endorse}{The value in \code{resp} indicating endorsement of the category in \code{categ}. This must be the same for all categories.
 Common values are 1 (default), "yes", TRUE, or 2 (for SPSS data).}
@@ -58,12 +58,12 @@ For all \code{approach} options, participants with missing data for all categori
 
 There are two options for \code{approach} that provide summary information rather than a single code for each \code{id}.
 
-*\code{"all"} returns a data frame with \code{new.name} variable comprised of all categories
+\code{"all"} returns a data frame with \code{new.name} variable comprised of all categories
 endorsed by separated by \code{sep}. The \code{time} argument is ignored when \code{approach = "all"}. Rather,
 if \code{data} includes a column for time, then output includes a row for each \code{id} at each time point.
 This approach is a useful exploratory first step for identifying all of the response patterns present in the data.
 
-*\code{"counts"} is only relevant for longitudinal data and returns a data frame with the number of times an \code{id} endorsed
+\code{"counts"} is only relevant for longitudinal data and returns a data frame with the number of times an \code{id} endorsed
 a category. Only categories with >= 1 endorsement are included for a particular \code{id}. As with \code{"all"}, the \code{time} argument
 is ignored and instead assumes \code{data} is in longer format with a row for each \code{id} by \code{time} combination. If not,
 the column of counts will be 1 for all rows.
@@ -74,12 +74,12 @@ only relevant for participants who selected more than one category whereas
 participants who only selected one category will be given that code in the output
 regardless of which approach is chosen.
 
-*\code{"multiple"} If participant endorsed multiple categories within or across time, code as \code{multi.name}.
+\code{"multiple"} If participant endorsed multiple categories within or across time, code as \code{multi.name}.
 
-*\code{"priority"} Same as "multiple" unless participant endorsed category in \code{priority} argument at any point.
+\code{"priority"} Same as "multiple" unless participant endorsed category in \code{priority} argument at any point.
 If so, then code in order specified in \code{priority}.
 
-*\code{"mode"} Participant is coded as the category with the mode (i.e., most common) endorsement across all time points.
+\code{"mode"} Participant is coded as the category with the mode (i.e., most common) endorsement across all time points.
 Ties are coded as as the value given in \code{multi.name}. If the \code{priority} argument is specified, these categories are prioritized
 first, followed by the mode response. The \code{"mode"} approach is only relevant if \code{time} is specified.
 When \code{time = NULL} it operates as \code{"priority"} (when specified) or \code{"multiple"}.
