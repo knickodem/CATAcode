@@ -1,5 +1,5 @@
 
-# CATAcode <img src="man/figures/logo.PNG" align="right" height="138" alt="" />
+# CATAcode <img src="man/figures/logo.png" align="right" height="138" alt="" />
 
 **Principled Approaches to Coding Check-All-That-Apply Responses**
 
