@@ -3,7 +3,7 @@ pkgdown: 2.2.1
 pkgdown_sha: ~
 articles:
   CATAcode-overview: CATAcode-overview.html
-last_built: 2026-10-15T20:08Z
+last_built: 2026-10-15T20:22Z
 urls:
   reference: https://knickodem.github.io/CATAcode/reference
   article: https://knickodem.github.io/CATAcode/articles
