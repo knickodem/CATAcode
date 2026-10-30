@@ -8,4 +8,6 @@ CRAN release: 2025-08-26
 
 ## CATAcode 1.0.1
 
+CRAN release: 2026-10-15
+
 - Changed logo file extension
