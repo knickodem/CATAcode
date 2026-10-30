@@ -1,4 +1,4 @@
-# CATAcode ![](reference/figures/logo.png)
+# CATAcode ![](reference/figures/logo.PNG)
 
 **Principled Approaches to Coding Check-All-That-Apply Responses**
 
